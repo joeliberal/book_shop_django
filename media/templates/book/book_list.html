@@ -1,0 +1,32 @@
+{% extends 'shred/site.html' %}
+
+{% block body %}
+{% if book_list %}
+
+    {% for book in book_list %}
+        <h3>{{book.title}}</h3>
+        <p>{{boo.summary}}</p>
+        <hr>
+    {% endfor %}
+
+    {% if is_paginated %}
+        {% if page_obj.has_previous %}
+            <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+            Page {{page_obj.number}} of {{page_obj.paginator.num_pages}} Pages
+        {% if page_object.has_next %}
+        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    {% endif %}
+{% else %}
+    <h1>not book !!!</h1>
+{% endif %}
+
+<!--
+<h1>my book:</h1><br>
+{% for mybook in my_book_list %}
+    {{b.title}}
+    {{b.summary}}
+{% endfor %}
+{% endblock %}
+-->
