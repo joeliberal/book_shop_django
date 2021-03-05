@@ -1,9 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Book, BookInstance, Author, Gener
 # Create your views here.
 from django.views import generic
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+from .form import RenewBookForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+
 
 def email_check(user):
     return user.email.endswith('@gmail.com')
@@ -62,3 +67,29 @@ class BorrowerListUser(PermissionRequiredMixin, generic.ListView):
     permission_required = 'book.can_read_private_section'
     def get_queryset(self):
         return BookInstance.objects.filter(borrower = self.request.user).filter(status__exact='o').order_by('due_back')
+
+
+def renew_book_librarian(request, pk):
+    book_inst = get_object_or_404(BookInstance, pk = pk)
+
+    if request.method == 'POST':
+        form = RenewBookForm(request.POST)
+
+        if form.is_valid():
+            book_inst.due_back = form.cleaned_data['renewal_date']
+            book_inst.save()
+
+            return HttpResponseRedirect(reverse('all-borrower')) #revers for use names urls.py
+
+
+    else:
+        propsed_renewal_date = datetime.date.today() + datetime.timedelta(weeks = 3)
+        form = RenewBookForm(initial = {'renewal_date' : propsed_renewal_date}) # default value form for 3 weeks after
+
+
+    context = {
+        'form':form,
+        'book_inst':book_inst,
+    }
+
+    return render(request, 'book/book_renew_librarian.html', context)

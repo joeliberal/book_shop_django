@@ -1,0 +1,21 @@
+{% extends 'shred/site.html' %}
+
+{% block body %}
+    {% if form.errors %}
+        {% for error,message in form.error.items %}
+            <div class="alert alert-danger" >{{error}} {{message}}</div>
+        {% endfor %}
+    {% endif %}
+    <h1>Renew:{{book_inst.book.title}}</h1>
+    <p>Borrower: {{book_inst.borrower}}</p>
+    <p {% if book_inst.is_overdue %} class="text-danger" {% endif %}>Due back: {{book_inst.due_back}}</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form_group">
+                <label for="renew_date">{{form_renewal_date.label}}</label>
+                {{form.form_renewal_date}}
+            </div>
+            <input type="btn btn-info" type="submit" value="submit">
+        </form>
+
+{% endblock %}
