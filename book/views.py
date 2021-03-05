@@ -4,7 +4,7 @@ from .models import Book, BookInstance, Author, Gener
 from django.views import generic
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
-from .form import RenewBookForm
+from .forms import RenewBookForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 

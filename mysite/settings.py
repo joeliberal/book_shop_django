@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'book.apps.BookConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,12 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 LOGIN_REDIRECT_URL = '/'
+
+#REST_FRAMEWORK = {
+#    'DEFAULT_AUTHENTICATION_CLASSES':(
+#        'rest_framework.authentication.SessionAuthentication'
+#    ),
+#    'DEFAULT_PERMISSION_CLASSES':(
+#        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+#    )
+#}
