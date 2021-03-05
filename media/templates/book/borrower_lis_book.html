@@ -1,0 +1,27 @@
+{% extends 'shred/site.html' %}
+
+
+{% block body %}
+    {% if  borrower%}
+        <ul>
+            {% for book_b in borrower %}
+                <li class="{% if bokk_b.is_overdue %} text-danger {% else %} text-wite {% endif %}" >
+                    <a href="{% url 'book:bookdetail' book_b.book.pk %}">{{ book_b.book.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-center text-wite ">There are no borrower</p>
+    {% endif %}
+    <hr>
+    {% if perms.book.can_read_private_section %}
+        <p>you are VIP user</p>
+        {% if perms.book.user_watcher %}
+            <small>Enter user name : <strong>{{user}}</strong></small>
+        {% else %}
+            <small style="color: tomato;" >you don't have permission</small>
+        {% endif %}
+    {% else %}
+        <small style="color: tomato;">you don't have permission</small>
+    {% endif %}
+{% endblock %}

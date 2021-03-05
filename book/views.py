@@ -2,16 +2,19 @@ from django.shortcuts import render
 from .models import Book, BookInstance, Author, Gener
 # Create your views here.
 from django.views import generic
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 
 def email_check(user):
-    reurn user.email.endswith('@gmail.com')
-
+    return user.email.endswith('@gmail.com')
 
 @login_required
-@user_passes_test(emaile_check)
+@permission_required('book.can_read_private_section')
+@user_passes_test(email_check)
 def index(request):
+    
+    user.has_perms = ('user.can_add')
+    
     num_book = Book.objects.all().count()
     num_instance = BookInstance.objects.all().count()
     num_instance_available = BookInstance.objects.filter(status__exact = 'a' )
@@ -32,7 +35,7 @@ class BookLisView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
     redirect_field_name = '/book'
 
     def test_func(self):
-        reurn user.email.endswith('@gmail.com')
+        return user.email.endswith('@gmail.com')
 
     #context_object_name = 'book_list'
     #template_name = 'book/book_list.html'
@@ -50,3 +53,12 @@ class BookLisView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
 class BookDetailView(generic.DetailView):
     model = Book
     context_object_name = 'book'
+
+
+class BorrowerListUser(PermissionRequiredMixin, generic.ListView):
+    model = BookInstance
+    template_name = 'book/borrower_lis_book.html'
+    context_object_name = 'borrwoer'
+    permission_required = 'book.can_read_private_section'
+    def get_queryset(self):
+        return BookInstance.objects.filter(borrower = self.request.user).filter(status__exact='o').order_by('due_back')
