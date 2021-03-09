@@ -9,7 +9,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-
 def email_check(user):
     return user.email.endswith('@gmail.com')
 

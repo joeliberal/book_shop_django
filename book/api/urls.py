@@ -5,5 +5,5 @@ app_name='api'
 
 urlpatterns =[
     path('list/', ApiBook.as_view(),name='api-list-book'),
-    path('update/<int:pk>/', AUDBook.as_view(),name'audbook'),
+    path('update/<int:pk>/', AUDBook.as_view(),name='audbook'),
 ]
