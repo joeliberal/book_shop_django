@@ -1,9 +1,52 @@
 version : '3.9'
+
 service:
-  web:
+
+  postgres:
+    container_name: postgres_project
+    image: postgres
+    environment: 
+      - POSTGRES_DB=shop_book
+      - POSTGRES_USER=joe
+      - POSTGRES_PASSWORD=j.l.2693
+    ports: 
+      - "5432:5432"
+    networks:
+      - main
+    restart: on-failure
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data  
+  
+  my_project:
+    container_name: shop_book
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: shell -c "python manage.py migrate && gunicorn mysite.wsgi -b 0.0.0.0:8000"
     volumes:
-      - .:project
-    ports:
-      - '8000:8000'
+      - .:/project
+    depends_on:
+      - postgres_project
+    expose:
+      - "8000"
+    networks:
+      - main  
+    restart: on-failure
+  
+
+  nginx:
+    container_name: nginx
+    command: nginx -g 'deamon off;'
+    depends_on:
+      -shop_book
+    image: nginx
+    ports: 
+      - "80:80"
+    restart: on_failure
+    volumes: 
+      - ./nginx.conf:/etc/nginx/nginx.conf 
+
+
+networks:
+  main:
+
+volumes: 
+  postgres_data:
