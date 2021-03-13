@@ -20,7 +20,7 @@ service:
   my_project:
     container_name: shop_book
     build: .
-    command: shell -c "python manage.py migrate && gunicorn mysite.wsgi -b 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate && gunicorn mysite.wsgi -b 0.0.0.0:8000"
     volumes:
       - .:/project
     depends_on:
