@@ -2,7 +2,7 @@ FROM python
 
 WORKDIR /project
 
-Run pip install -U pip
+RUN pip install -U pip
 
 COPY requirements.txt /project
 
