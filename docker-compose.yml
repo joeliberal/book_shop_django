@@ -8,7 +8,7 @@ service:
     environment: 
       - POSTGRES_DB=shop_book
       - POSTGRES_USER=joe
-      - POSTGRES_PASSWORD=j.l.2693
+      - POSTGRES_PASSWORD=jl2693
     ports: 
       - "5432:5432"
     networks:
